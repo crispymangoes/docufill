@@ -10,7 +10,10 @@ export const Container = ({config, formik}) => {
                   <label htmlFor={individualConfig.field}>{individualConfig.label}</label>
                   <input type='text' 
                     name={individualConfig.field} 
-                    onChange={formik.handleChange} style={{...individualConfig.style}} />
+                    onChange={formik.handleChange} 
+                    style={{...individualConfig.style}}
+                    value={formik.values[individualConfig.field]}
+                     />
                   </div>
                 </>
               );
