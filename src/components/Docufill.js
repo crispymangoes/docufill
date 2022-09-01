@@ -18,6 +18,7 @@ export const Docufill = () => {
     }
   });
   return (
+    <div>
     <form onSubmit={formik.handleSubmit}>
     <label htmlFor="first_name">First Name</label>
       <input
@@ -25,7 +26,7 @@ export const Docufill = () => {
         name="first_name"
         type="text"
         onChange={formik.handleChange}
-        value={formik.values.first_name}
+        
       />
 
       <label htmlFor="last_name">Last Name</label>
@@ -56,5 +57,6 @@ export const Docufill = () => {
       />
       <button type="submit">Submit</button>
     </form>
+    </div>
   );
 };
