@@ -1,17 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { generateDocument } from "./GenerateDocument";
 import { Container } from './Container';
-import { response } from "./apiresponse"
+import { get } from "./fetch";
 
-const formSchema = {
-    first_name: "Ryan",
-    last_name: "Buxman",
-    phone: "719-334-0415",
-    description: "Default"
-};
-
+//Think the initial value for the form needs to be passed in via props... cuz I can't set up formik in the useEffect
 export const DynamicDocufill = () => {
+
+  // Stores data used to generate form, must be called by API
+  const [data, setData] = useState({});
+
+  const [response, setResponse] = useState(null);
+  useEffect(() => {
+    async function fetchData() {
+      get().then((res) => setResponse(res.data));
+    }
+    fetchData();
+},[]);
+  
+  useEffect(() => {
+    // Format api response
+    //const result = JSON.parse(response);
+    if (response) {
+    for (const field of response) {
+      setData((prev) => ({
+        ...prev,
+        [field['field']]: ""
+      }));
+    }
+  }
+  }, [response]);
+  
   const formik = useFormik({
     initialValues: {},
     onSubmit: values => {
@@ -19,11 +38,12 @@ export const DynamicDocufill = () => {
       generateDocument(values);
     }
   });
-  // This function would be a user uploads their saved config, then it populates the form for them.
+
   const handleReset = () => {
-    formik.setValues(formSchema);
+    formik.setValues(data);
   }
 
+  //TODO rename data so it is different from the global one
   const downloadFile = ({ data, fileName, fileType }) => {
     // Create a blob with the data we want to download as a file
     const blob = new Blob([data], { type: fileType })
@@ -50,6 +70,8 @@ export const DynamicDocufill = () => {
     })
   }
 
+  // Would be cool to parse through json and see if any key values match, what we need, pull them out of the json.
+  // that way people can take similair config files and use them to populate  some of the shared fields!
   const uploadJson = e => {
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
@@ -59,6 +81,8 @@ export const DynamicDocufill = () => {
     };
   }
 
+  if (!response) return <div>Loading...</div>;
+
   return (
     <div>
     <form onSubmit={formik.handleSubmit}>
@@ -66,7 +90,7 @@ export const DynamicDocufill = () => {
       <button type="submit">Submit</button>
     </form>
     <button onClick={handleReset}>Reset</button>
-    <button onClick={exportToJson}>Export</button>
+    <button onClick={exportToJson}>Save Fields</button>
     <input type="file" onChange={uploadJson} />
     </div>
   );

@@ -12,7 +12,7 @@ export const Container = ({config, formik}) => {
                     name={individualConfig.field} 
                     onChange={formik.handleChange} 
                     style={{...individualConfig.style}}
-                    value={formik.values[individualConfig.field]}
+                    value={formik.values[individualConfig.field] || ''}
                      />
                   </div>
                 </>
