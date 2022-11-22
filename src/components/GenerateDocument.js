@@ -6,10 +6,11 @@ import { saveAs } from 'file-saver';
 function loadFile(url, callback) {
     PizZipUtils.getBinaryContent(url, callback);
   }
-
+// 'http://127.0.0.1:4000/get-files/tag-example.docx'
+// https://docxtemplater.com/tag-example.docx
 export const generateDocument = (form) => {
     loadFile(
-      'https://docxtemplater.com/tag-example.docx',
+      'http://127.0.0.1:4000/get-files/tag-example.docx',
       function (error, content) {
         if (error) {
           throw error;
